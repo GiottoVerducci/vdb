@@ -478,10 +478,15 @@ def get_library_by_artist(artist, library):
 
 def get_library_by_name(name, library):
     match_cards = []
-    for card in library:
+    if len(name) == 2:
+        for card in library:
+            if name in card['Initials']: 
+                match_cards.append(card)
+    else:
         name = name.lower()
-        if name in card['ASCII Name'].lower() or name in card['Name'].lower():
-            match_cards.append(card)
+        for card in library:
+            if name in card['ASCII Name'].lower() or name in card['Name'].lower() or name in card['Initials']:
+                match_cards.append(card)
 
     return match_cards
 

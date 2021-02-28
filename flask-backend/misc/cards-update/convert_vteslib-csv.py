@@ -8,6 +8,24 @@ def letters_to_ascii(text):
     return ''.join(c for c in unicodedata.normalize('NFD', text)
                    if unicodedata.category(c) != 'Mn')
 
+def isAlphaOrNumeric(char):
+    return (char >= 'A' and char <= 'Z') or (char >= '0' and char <= '9')
+
+def get_initials(text):
+    if(len(text) == 0): 
+        return text
+    text = text.replace('\'S', '')
+    result = ''
+    i = 0
+    while(i < len(text)):
+        while(i < len(text) and not isAlphaOrNumeric(text[i])):
+            i+=1
+        if(i < len(text)):
+            result += text[i]
+        while(i < len(text) and isAlphaOrNumeric(text[i])):
+            i+=1
+        i+=1
+    return result
 
 integer_fields = ['Id']
 useless_fields = ['Aka', 'Flavor Text', 'Draft']
@@ -45,6 +63,9 @@ with open("vteslib.csv", "r",
             card['ASCII Name'] = "Bang Nakh - Tiger's Claws"
         else:
             card['ASCII Name'] = letters_to_ascii(card['Name'])
+
+        # collect initials
+        card['Initials'] = get_initials(card['ASCII Name'].upper())
 
         # Convert sets to dict
         sets = card['Set'].split(', ')
